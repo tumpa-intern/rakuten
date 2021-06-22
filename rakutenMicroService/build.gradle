@@ -1,0 +1,47 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.axisrooms'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	//implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.5.0'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+	implementation group: 'com.google.guava', name: 'guava', version: 'r05'
+	implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.2'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.0.Final'
+	implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.4'
+	implementation group: 'com.caucho', name: 'quercus', version: '4.0.45'
+
+
+
+}
+
+test {
+	useJUnitPlatform()
+}
