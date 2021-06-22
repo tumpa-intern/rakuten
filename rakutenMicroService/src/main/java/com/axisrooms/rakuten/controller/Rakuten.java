@@ -83,20 +83,22 @@ public class Rakuten {
 	RoomInfoResponse object = new RoomInfoResponse();
 	if (responseEntity.getStatusCode().name().equals("OK")) {
 
-	    object.setMessage("successful");
-	    object.setStatus("successful");
+	    object.setMessage("Successful");
+	    object.setStatus(String.valueOf(responseEntity.getStatusCodeValue()));
 	    List<Room> list = roomResponse.getRooms();
 	    List<RoomDataResponse> rooms = new ArrayList<>(list.size());
 	    int count = 0;
 	    String id = null, name = null;
 	    for (Room obj : list) {
-		id = obj.getDescription().getId();
-		name = obj.getDescription().getName();
+		id = obj.getTitle().getEnUS();
 		RoomDataResponse objroom = new RoomDataResponse();
 		objroom.setId(id);// id == null ? "null" :
-		objroom.setName(name); // name == null ? "null" :
+		objroom.setName(id); // name == null ? "null" :
 		rooms.add(objroom);
 	    }
+
+	    object.setData(rooms);
+	}
 
 	    object.setData(rooms);
 	}
