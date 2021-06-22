@@ -60,8 +60,6 @@ public class Rakuten {
 	    ProductInfoResponse roomResponse = otaManager.getRoomList(hotelId);
 	    responseEntity = new ResponseEntity<>(roomResponse, HttpStatus.OK);
 	    RoomInfoResponse object = mapData(responseEntity, roomResponse);
-	    ;
-	    // mapData(object, responseEntity, roomResponse);
 	    return new ResponseEntity<>(object, HttpStatus.OK);
 	} catch (SocketTimeoutException e) {
 	    log.error("Encountered exception while getting rooms", e);
