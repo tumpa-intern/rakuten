@@ -143,10 +143,13 @@ public class Rakuten {
     @ApiOperation(value = "Updates inventory to rakuten ota", response = InventoryResponse.class)
     public ResponseEntity<?> updateInventory(@Valid @RequestBody InventoryRequest inventoryRequest) {
 	log.info("inside update inventory api of rakuten ota Request Received is ====>" + inventoryRequest);
+	InventoryResponse response;
 	ResponseEntity<?> responseEntity;
 	try {
-	    InventoryResponse inventoryResponse = otaManager.updateInventory(inventoryRequest);
-	    responseEntity = new ResponseEntity<>(inventoryResponse, HttpStatus.OK);
+	    response = otaManager.updateInventory(inventoryRequest);
+	    responseEntity = new ResponseEntity<>(response, HttpStatus.OK);
+	    return responseEntity;
+	    // TO DO
 	} catch (SocketTimeoutException e) {
 	    log.error("Encountered exception while getting rooms", e);
 	    PriceResponse priceResponse = new PriceResponse();
