@@ -97,33 +97,45 @@ public class RakutenOtaManager implements OTAManager {
         return null;
     }
 
-    @Override
+   @Override
     public InventoryResponse updateInventory(InventoryRequest inventoryRequest) throws Exception {
-        TransactionLog transactionLog = new TransactionLog();
-        Utils.addCommonData(inventoryRequest, transactionLog);
-        InventoryResponse inventoryResponse = null;
-        try {
-            Utils.addCMRequest(inventoryRequest, transactionLog);
-            InventoryUpdate inventoryUpdateRequest = buildInventoryUpdateRequest(inventoryRequest);
-            String jsonString = MarshalUnmarshalUtils.serialize(inventoryUpdateRequest);
-            log.info("update inventory request:: " + jsonString);
-            Utils.addOTARequest(jsonString, transactionLog);
-            InventoryUpdateResponse inventoryUpdateResponse = restTemplate
-                    .postForObject(getUpdateInvUrl, inventoryUpdateRequest, InventoryUpdateResponse.class);
-            log.info("Response for update inventory....." + MarshalUnmarshalUtils.serialize(inventoryUpdateResponse));
-            Utils.addOTAResponse(MarshalUnmarshalUtils.serialize(inventoryUpdateResponse), transactionLog);
-            inventoryResponse = buildInventoryResponse(inventoryUpdateResponse);
-            Utils.addCMResponse(inventoryResponse, transactionLog);
+	TransactionLog transactionLog = new TransactionLog();
+	Utils.addCommonData(inventoryRequest, transactionLog);
+	InventoryUpdateResponse inventoryUpdateResponse = null;
+	InventoryResponse inventoryResponse = null;
+	try {
+	    Utils.addCMRequest(inventoryRequest, transactionLog);
+	    InventoryUpdate inventoryUpdateRequest = buildInventoryUpdateRequest(inventoryRequest);
+	    String jsonString = MarshalUnmarshalUtils.serialize(inventoryUpdateRequest);
+	    log.info("update inventory request:: " + jsonString);
+	    Utils.addOTARequest(jsonString, transactionLog);
+	    HttpHeaders httpHeaders = new HttpHeaders();
+	    httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+	    String ans = getpage();
+	    httpHeaders.set("Authorization", ans);
+	    String Url = getUpdateInvUrl;
+	    String jsonBody = MarshalUnmarshalUtils.serialize(inventoryRequest);
+	    HttpEntity<String> entity = new HttpEntity<String>(jsonBody, httpHeaders);
+	    ResponseEntity<InventoryUpdateResponse> response = restTemplate.exchange(Url, HttpMethod.POST, entity,
+		    InventoryUpdateResponse.class);
+//            InventoryUpdateResponse inventoryUpdateResponse = restTemplate
+//                    .postForObject(getUpdateInvUrl, inventoryUpdateRequest, InventoryUpdateResponse.class);
 
-        } catch (Throwable throwable) {
-            Utils.addOTAResponse(throwable, transactionLog);
-            throw throwable;
-        } finally {
-            repository.save(transactionLog);
-        }
-        return inventoryResponse;
+	    log.info("Response for update inventory....." + MarshalUnmarshalUtils.serialize(inventoryUpdateResponse));
+	    Utils.addOTAResponse(MarshalUnmarshalUtils.serialize(inventoryUpdateResponse), transactionLog);
+	    inventoryResponse = buildInventoryResponse(inventoryUpdateResponse);
+	    Utils.addCMResponse(inventoryResponse, transactionLog);
+
+	} catch (Throwable throwable) {
+	    Utils.addOTAResponse(throwable, transactionLog);
+	    throw throwable;
+	} finally {
+	    repository.save(transactionLog);
+	}
+
+	return inventoryResponse;
     }
-
+    
     @Override
     public PriceResponse updatePrice(PriceRequest priceRequest) throws OccupancyNotSupportedException, Exception {
         TransactionLog transactionLog = new TransactionLog();
